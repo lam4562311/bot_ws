@@ -1,0 +1,8 @@
+prefix=/home/robocon-dr1/bot_ws/install
+
+Name: ps4_bot
+Description: Description of ps4_bot
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
