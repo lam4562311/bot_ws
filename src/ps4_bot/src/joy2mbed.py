@@ -17,6 +17,8 @@ pubsqu = None
 pubcro = None
 pubcir = None
 pubtri = None
+pubL1 = None
+pubR1 = None
 
 reverse_fac = 1.0
 speeding_fac = 1.0
@@ -30,16 +32,21 @@ def callback(data):
 
     keypad = Int32MultiArray()
     for index in range(0,4):
-        keypad.data.append(bt.data[index]) # square, cross, circle, triangle, 0-3
+        keypad.data.append(bt.data[index]) # square, cross, circle, triangle, 0-3;
+	                                   # L1, R1, 4-5
     squ = Bool()
     cro = Bool()
     cir = Bool()
     tri = Bool()
+    L1 = Bool()
+    R1 = Bool()
 
     squ.data = False
     cro.data = False
     cir.data = False
     tri.data = False
+    L1.data = False
+    R2.data = False
 
     if bt.data[0]==1:
         squ.data = True
@@ -57,14 +64,23 @@ def callback(data):
         tri.data = True
     else:
         tri.data = False
+	
+    if bt.data[4] == 1:
+	L1.data = True
+    else:
+	L1.data = False
+    if bt.data[5] == 1:
+	R1.data = True
+    else:
+	R1.data = Fales
 
     if bt.data[8] == 1:
-        reverse_fac *= -1.0
+        reverse_fac *= -1.0 #share
 
     if bt.data[6] == 1 and speeding_fac == 1:
-        speeding_fac = 1.5
+        speeding_fac = 1.5 #L2
     elif bt.data[7] == 1 and speeding_fac == 1:
-        speeding_fac = 0.8
+        speeding_fac = 0.5  #R2
     else:
         speeding_fac = 1.0
 
@@ -92,9 +108,13 @@ def callback(data):
     keypad.linear.x = axKL
     keypad.linear.y = axKU
 
+    print(squ.data)
     print(cro.data)
     print(cir.data)
     print(tri.data)
+    print(L1.data)
+    print(R1.data)
+ 
 
     pubtw.publish(twist)
     # pubbt.publish(keypad)
@@ -102,6 +122,8 @@ def callback(data):
     pubcro.publish(cro)
     pubcir.publish(cir)
     pubtri.publish(tri)
+    pubL1.publish(L1)
+    pubR1.publish(R1)
     pubkey.publish(keypad)
     
 # Intializes everything
@@ -115,6 +137,8 @@ def start():
     global pubtri
     global pubtw
     global pubkey
+    global pubL1
+    global pubR1
 
     # starts the node
     rospy.init_node('Joy2mbed')
@@ -136,6 +160,13 @@ def start():
     pubtri = rospy.Publisher("button_triangle",
 			                Bool,
                             queue_size = 1)
+    pubL1 = rospy.Publisher("button_L1",
+			            Bool,
+			    queue_size = 1)
+    pubR1 = rospy.Publisher("button_R1",
+			           Bool,
+			   queue_size = 1)
+
     pubkey = rospy.Publisher("button_keypad",
                              Twist,
                              tcp_nodelay = True,
