@@ -19,6 +19,9 @@ pubcir = None
 pubtri = None
 pubL1 = None
 pubR1 = None
+pubopt = None
+pubps = None
+pubpad = None
 
 reverse_fac = 1.0
 speeding_fac = 1.0
@@ -40,6 +43,10 @@ def callback(data):
     tri = Bool()
     L1 = Bool()
     R1 = Bool()
+    opt = Bool()
+    ps = Bool()
+    pad = Bool()
+
 
     squ.data = False
     cro.data = False
@@ -47,6 +54,9 @@ def callback(data):
     tri.data = False
     L1.data = False
     R1.data = False
+    opt.data = False
+    ps.data = False
+    pad.data = False
 
     if bt.data[0]==1:
         squ.data = True
@@ -75,6 +85,19 @@ def callback(data):
 
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
+    if bt.data[9] == 1:
+        opt.data = True
+    else:
+        opt.data = False
+
+    if bt.data[12] == 1:
+        ps.data = True
+    else:
+        ps.data = False
+    if  bt.data[13] == 1:
+        pad.data = True
+    else:
+        pad.data = False
 
     if bt.data[6] == 1 and speeding_fac == 1:
         speeding_fac = 1.5 #L2
@@ -123,6 +146,9 @@ def callback(data):
     pubL1.publish(L1)
     pubR1.publish(R1)
     pubkey.publish(keypad)
+    pubopt.publish(opt)
+    pubps.publish(ps)
+    pubpad.publish(pad)
     
 # Intializes everything
 def start():
@@ -137,6 +163,9 @@ def start():
     global pubkey
     global pubL1
     global pubR1
+    global pubopt
+    global pubps
+    global pubpad
 
     # starts the node
     rospy.init_node('Joy2mbed')
@@ -169,6 +198,15 @@ def start():
                              Twist,
                              tcp_nodelay = True,
                              queue_size = 1)
+    pubopt = rospy.Publisher("button_opt",
+                            Bool,
+                            queue_size = 1)
+    pubps = rospy.Publisher("button_ps",
+                            Bool,
+                            queue_size = 1)
+    pubpad = rospy.Publisher("button_pad",
+                            Bool,
+                            queue_size = 1)
     rospy.Subscriber("joy", 
                      Joy, 
                      callback, 
