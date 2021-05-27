@@ -46,7 +46,7 @@ def callback(data):
     cir.data = False
     tri.data = False
     L1.data = False
-    R2.data = False
+    R1.data = False
 
     if bt.data[0]==1:
         squ.data = True
@@ -64,15 +64,14 @@ def callback(data):
         tri.data = True
     else:
         tri.data = False
-	
     if bt.data[4] == 1:
-	L1.data = True
+	    L1.data = True
     else:
-	L1.data = False
+	    L1.data = False
     if bt.data[5] == 1:
-	R1.data = True
+    	R1.data = True
     else:
-	R1.data = Fales
+	    R1.data = False
 
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
@@ -117,7 +116,6 @@ def callback(data):
  
 
     pubtw.publish(twist)
-    # pubbt.publish(keypad)
     pubsqu.publish(squ)
     pubcro.publish(cro)
     pubcir.publish(cir)
@@ -161,11 +159,11 @@ def start():
 			                Bool,
                             queue_size = 1)
     pubL1 = rospy.Publisher("button_L1",
-			            Bool,
-			    queue_size = 1)
+			                Bool,
+			                queue_size = 1)
     pubR1 = rospy.Publisher("button_R1",
-			           Bool,
-			   queue_size = 1)
+			                Bool,
+			                queue_size = 1)
 
     pubkey = rospy.Publisher("button_keypad",
                              Twist,
