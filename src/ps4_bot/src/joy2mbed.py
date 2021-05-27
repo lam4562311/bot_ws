@@ -17,8 +17,8 @@ pubsqu = None
 pubcro = None
 pubcir = None
 pubtri = None
-pubL1 = None
-pubR1 = None
+publ1 = None
+pubr1 = None
 pubopt = None
 pubps = None
 pubpad = None
@@ -36,13 +36,13 @@ def callback(data):
     keypad = Int32MultiArray()
     for index in range(0,4):
         keypad.data.append(bt.data[index]) # square, cross, circle, triangle, 0-3;
-	                                   # L1, R1, 4-5
+	                                   # l1, r1, 4-5
     squ = Bool()
     cro = Bool()
     cir = Bool()
     tri = Bool()
-    L1 = Bool()
-    R1 = Bool()
+    l1 = Bool()
+    r1 = Bool()
     opt = Bool()
     ps = Bool()
     pad = Bool()
@@ -52,8 +52,8 @@ def callback(data):
     cro.data = False
     cir.data = False
     tri.data = False
-    L1.data = False
-    R1.data = False
+    l1.data = False
+    r1.data = False
     opt.data = False
     ps.data = False
     pad.data = False
@@ -75,13 +75,13 @@ def callback(data):
     else:
         tri.data = False
     if bt.data[4] == 1:
-	    L1.data = True
+	    l1.data = True
     else:
-	    L1.data = False
+	    l1.data = False
     if bt.data[5] == 1:
-    	R1.data = True
+    	r1.data = True
     else:
-	    R1.data = False
+	    r1.data = False
 
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
@@ -134,8 +134,8 @@ def callback(data):
     print(cro.data)
     print(cir.data)
     print(tri.data)
-    print(L1.data)
-    print(R1.data)
+    print(l1.data)
+    print(r1.data)
  
 
     pubtw.publish(twist)
@@ -143,8 +143,8 @@ def callback(data):
     pubcro.publish(cro)
     pubcir.publish(cir)
     pubtri.publish(tri)
-    pubL1.publish(L1)
-    pubR1.publish(R1)
+    publ1.publish(l1)
+    pubr1.publish(r1)
     pubkey.publish(keypad)
     pubopt.publish(opt)
     pubps.publish(ps)
@@ -161,8 +161,8 @@ def start():
     global pubtri
     global pubtw
     global pubkey
-    global pubL1
-    global pubR1
+    global publ1
+    global pubr1
     global pubopt
     global pubps
     global pubpad
@@ -174,26 +174,24 @@ def start():
                             Twist, 
                             tcp_nodelay = True, 
                             queue_size = 1)
-
     pubsqu = rospy.Publisher("button_square",
-			                Bool,
+                            Bool,
                             queue_size = 1)
-    pubcro = rospy.Publisher("button_cross",
-			                Bool,
+    pubcro = rospy.Publisher("button_cross",\
+                            Bool,
                             queue_size = 1)
     pubcir = rospy.Publisher("button_circle",
-			                Bool,
+                            Bool,
                             queue_size = 1)
     pubtri = rospy.Publisher("button_triangle",
-			                Bool,
+                            Bool,
                             queue_size = 1)
-    pubL1 = rospy.Publisher("button_L1",
-			                Bool,
+    publ1 = rospy.Publisher("button_l1",
+                            Bool,
 			                queue_size = 1)
-    pubR1 = rospy.Publisher("button_R1",
-			                Bool,
+    pubr1 = rospy.Publisher("button_r1",
+                            Bool,
 			                queue_size = 1)
-
     pubkey = rospy.Publisher("button_keypad",
                              Twist,
                              tcp_nodelay = True,
