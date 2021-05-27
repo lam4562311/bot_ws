@@ -136,7 +136,7 @@ def callback(data):
     print(tri.data)
     print(l1.data)
     print(r1.data)
- 
+    
 
     pubtw.publish(twist)
     pubsqu.publish(squ)
@@ -186,10 +186,10 @@ def start():
     pubtri = rospy.Publisher("button_triangle",
                             Bool,
                             queue_size = 1)
-    publ1 = rospy.Publisher("button_l1",
+    publ1 = rospy.Publisher("button_L1",
                             Bool,
                             queue_size = 1)
-    pubr1 = rospy.Publisher("button_r1",
+    pubr1 = rospy.Publisher("button_R1",
                             Bool,
 			                queue_size = 1)
     pubkey = rospy.Publisher("button_keypad",
