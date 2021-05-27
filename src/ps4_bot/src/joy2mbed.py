@@ -75,13 +75,13 @@ def callback(data):
     else:
         tri.data = False
     if bt.data[4] == 1:
-	    l1.data = True
+        l1.data = True
     else:
-	    l1.data = False
+        l1.data = False
     if bt.data[5] == 1:
-    	r1.data = True
+        r1.data = True
     else:
-	    r1.data = False
+        r1.data = False
 
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
@@ -188,7 +188,7 @@ def start():
                             queue_size = 1)
     publ1 = rospy.Publisher("button_l1",
                             Bool,
-			                queue_size = 1)
+                            queue_size = 1)
     pubr1 = rospy.Publisher("button_r1",
                             Bool,
 			                queue_size = 1)
