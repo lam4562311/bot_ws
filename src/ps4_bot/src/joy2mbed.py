@@ -19,6 +19,8 @@ pubcir = None
 pubtri = None
 publ1 = None
 pubr1 = None
+publ3 = None
+pubr3 = None
 pubopt = None
 pubps = None
 pubpad = None
@@ -43,6 +45,8 @@ def callback(data):
     tri = Bool()
     l1 = Bool()
     r1 = Bool()
+    l3 = Bool()
+    r3 = Bool()
     opt = Bool()
     ps = Bool()
     pad = Bool()
@@ -54,6 +58,8 @@ def callback(data):
     tri.data = False
     l1.data = False
     r1.data = False
+    l3.data = False
+    r3.data = False
     opt.data = False
     ps.data = False
     pad.data = False
@@ -82,14 +88,20 @@ def callback(data):
         r1.data = True
     else:
         r1.data = False
-
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
     if bt.data[9] == 1:
         opt.data = True
     else:
         opt.data = False
-
+    if bt.data[10] == 1:
+        l3.data = True
+    else:
+        l3.data = False
+    if bt.data[11] == 1:
+        r3.data = True
+    else:
+        r3.data = False
     if bt.data[12] == 1:
         ps.data = True
     else:
@@ -99,12 +111,22 @@ def callback(data):
     else:
         pad.data = False
 
-    if bt.data[6] == 1 and speeding_fac == 1:
-        speeding_fac = 1.5 #L2
-    elif bt.data[7] == 1 and speeding_fac == 1:
-        speeding_fac = 0.5  #R2
-    else:
-        speeding_fac = 1.0
+    #constant speeding
+    # if bt.data[6] == 1 and speeding_fac == 1:
+    #     speeding_fac = 1.5 #L2
+    # elif bt.data[7] == 1 and speeding_fac == 1:
+    #     speeding_fac = 0.5  #R2
+    # else:
+    #     speeding_fac = 1.0
+
+    speeding_fac = 1.0
+    # -> deceleration
+    if not data.axes[3] - 1 == 0: #L1 state
+        speeding_fac = speeding_fac - abs(data.axes[3] - 1)/2
+    # -> acceleration
+    if not data.axes[4] - 1 == 0: #R1 state
+        speeding_fac = speeding_fac - (data.axes[4] - 1)/2
+    
 
     ax1 = np.round(20.0 * speeding_fac * reverse_fac * data.axes[0], 2)
     ax2 = np.round(20.0 * speeding_fac * reverse_fac * data.axes[1], 2)
@@ -145,6 +167,8 @@ def callback(data):
     pubtri.publish(tri)
     publ1.publish(l1)
     pubr1.publish(r1)
+    publ3.publish(l3)
+    pubr3.publish(r3)
     pubkey.publish(keypad)
     pubopt.publish(opt)
     pubps.publish(ps)
@@ -163,6 +187,8 @@ def start():
     global pubkey
     global publ1
     global pubr1
+    global publ3
+    global pubr3
     global pubopt
     global pubps
     global pubpad
@@ -190,6 +216,12 @@ def start():
                             Bool,
                             queue_size = 1)
     pubr1 = rospy.Publisher("button_R1",
+                            Bool,
+			                queue_size = 1)
+    publ3 = rospy.Publisher("button_L3",
+                            Bool,
+                            queue_size = 1)
+    pubr3 = rospy.Publisher("button_R3",
                             Bool,
 			                queue_size = 1)
     pubkey = rospy.Publisher("button_keypad",
