@@ -128,9 +128,9 @@ def callback(data):
         speeding_fac = speeding_fac - (data.axes[4] - 1)/2
     
 
-    ax1 = np.round(20.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-    ax2 = np.round(20.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-    ax3 = np.round(20.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    ax1 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+    ax2 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+    ax3 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[2], 2)
 
     axKL = data.axes[6]
     axKU = data.axes[7]
