@@ -60,46 +60,42 @@ def callback(data):
     bt = Int32MultiArray()
     bt.data = data.buttons
 
-    keypad = Int32MultiArray()
-    for index in range(0,4):
-        keypad.data.append(bt.data[index]) # square, cross, circle, triangle, 0-3;
-	                                   # l1, r1, 4-5
 
     if bt.data[0]!=squ.data:
         squ.data = bt.data[0]
-	pubsqu.publish(squ)
+	    pubsqu.publish(squ)
     if bt.data[1]!=cro.data:
         cro.data = bt.data[1]
-	pubcro.publish(cro)
+	    pubcro.publish(cro)
     if bt.data[2]!=cir.data:
         cir.data = bt.data[2]
-	pubcir.publish(cir)
+	    pubcir.publish(cir)
     if bt.data[3]!=tri.data:
         tri.data = bt.data[3]
-	pubtri.publish(tri)
+	    pubtri.publish(tri)
     if bt.data[4]!=l1.data:
         l1.data = bt.data[4]
-	publ1.publish(l1)
+	    publ1.publish(l1)
     if bt.data[5]!=r1.data:
         r1.data = bt.data[5]
-	pubr1.publish(r1)
+	    pubr1.publish(r1)
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
     if bt.data[9]!=opt.data:
         opt.data = bt.data[9]
-	pubopt.publish(opt)
+	    pubopt.publish(opt)
     if bt.data[10]!=l3.data:
         l3.data = bt.data[10]
-	publ3.publish(l3)
+	    publ3.publish(l3)
     if bt.data[11]!=r3.data:
         r3.data = bt.data[11]
-	pubr3.publish(r3)
+	    pubr3.publish(r3)
     if bt.data[12]!=ps.data:
         ps.data = bt.data[12]
-	pubps.publish(ps)
+	    pubps.publish(ps)
     if  bt.data[13]!=pad.data:
         pad.data = bt.data[13]
-	pubpad.publish(pad)
+	    pubpad.publish(pad)
 
     speeding_fac = 1.0
     # -> deceleration
