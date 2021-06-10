@@ -160,7 +160,7 @@ def start():
     pubsqu = rospy.Publisher("button_square",
                             Bool,
                             queue_size = 1)
-    pubcro = rospy.Publisher("button_cross",\
+    pubcro = rospy.Publisher("button_cross",
                             Bool,
                             queue_size = 1)
     pubcir = rospy.Publisher("button_circle",
