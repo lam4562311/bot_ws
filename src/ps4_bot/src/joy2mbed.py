@@ -25,6 +25,31 @@ pubopt = None
 pubps = None
 pubpad = None
 
+squ = Bool()
+cro = Bool()
+cir = Bool()
+tri = Bool()
+l1 = Bool()
+r1 = Bool()
+l3 = Bool()
+r3 = Bool()
+opt = Bool()
+ps = Bool()
+pad = Bool()
+
+squ.data = False
+cro.data = False
+cir.data = False
+tri.data = False
+l1.data = False
+r1.data = False
+l3.data = False
+r3.data = False
+opt.data = False
+ps.data = False
+pad.data = False
+
+
 reverse_fac = 1.0
 speeding_fac = 1.0
 
@@ -39,85 +64,42 @@ def callback(data):
     for index in range(0,4):
         keypad.data.append(bt.data[index]) # square, cross, circle, triangle, 0-3;
 	                                   # l1, r1, 4-5
-    squ = Bool()
-    cro = Bool()
-    cir = Bool()
-    tri = Bool()
-    l1 = Bool()
-    r1 = Bool()
-    l3 = Bool()
-    r3 = Bool()
-    opt = Bool()
-    ps = Bool()
-    pad = Bool()
 
-
-    squ.data = False
-    cro.data = False
-    cir.data = False
-    tri.data = False
-    l1.data = False
-    r1.data = False
-    l3.data = False
-    r3.data = False
-    opt.data = False
-    ps.data = False
-    pad.data = False
-
-    if bt.data[0]==1:
-        squ.data = True
-    else:
-        squ.data = False
-    if bt.data[1]==1:
-        cro.data = True
-    else:
-        cro.data = False
-    if bt.data[2]==1:
-        cir.data = True
-    else:
-        cir.data = False
-    if bt.data[3]==1:
-        tri.data = True
-    else:
-        tri.data = False
-    if bt.data[4] == 1:
-        l1.data = True
-    else:
-        l1.data = False
-    if bt.data[5] == 1:
-        r1.data = True
-    else:
-        r1.data = False
+    if bt.data[0]!=squ.data:
+        squ.data = bt.data[0]
+	pubsqu.publish(squ)
+    if bt.data[1]!=cro.data:
+        cro.data = bt.data[1]
+	pubcro.publish(cro)
+    if bt.data[2]!=cir.data:
+        cir.data = bt.data[2]
+	pubcir.publish(cir)
+    if bt.data[3]!=tri.data:
+        tri.data = bt.data[3]
+	pubtri.publish(tri)
+    if bt.data[4]!=l1.data:
+        l1.data = bt.data[4]
+	publ1.publish(l1)
+    if bt.data[5]!=r1.data:
+        r1.data = bt.data[5]
+	pubr1.publish(r1)
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
-    if bt.data[9] == 1:
-        opt.data = True
-    else:
-        opt.data = False
-    if bt.data[10] == 1:
-        l3.data = True
-    else:
-        l3.data = False
-    if bt.data[11] == 1:
-        r3.data = True
-    else:
-        r3.data = False
-    if bt.data[12] == 1:
-        ps.data = True
-    else:
-        ps.data = False
-    if  bt.data[13] == 1:
-        pad.data = True
-    else:
-        pad.data = False
-
-    #constant speeding
-    # if bt.data[6] == 1 and speeding_fac == 1:
-    #     speeding_fac = 1.5 #L2
-    # elif bt.data[7] == 1 and speeding_fac == 1:
-    #     speeding_fac = 0.5  #R2
-    # else:
-    #     speeding_fac = 1.0
+    if bt.data[9]!=opt.data:
+        opt.data = bt.data[9]
+	pubopt.publish(opt)
+    if bt.data[10]!=l3.data:
+        l3.data = bt.data[10]
+	publ3.publish(l3)
+    if bt.data[11]!=r3.data:
+        r3.data = bt.data[11]
+	pubr3.publish(r3)
+    if bt.data[12]!=ps.data:
+        ps.data = bt.data[12]
+	pubps.publish(ps)
+    if  bt.data[13]!=pad.data:
+        pad.data = bt.data[13]
+	pubpad.publish(pad)
 
     speeding_fac = 1.0
     # -> deceleration
@@ -134,14 +116,6 @@ def callback(data):
 
     axKL = data.axes[6]
     axKU = data.axes[7]
-    # print("[INFO] data.axes[0]: {}".format(data.axes[0]))
-    # print("[INFO] data.axes[1]: {}".format(data.axes[1]))
-    # print("[INFO] data.axes[2]: {}".format(data.axes[2]))
-    # print("")
-    # print("[INFO] ax1: {}".format(ax1))
-    # print("[INFO] ax2: {}".format(ax2))
-    # print("[INFO] ax3: {}".format(ax3))
-    # print("=" * 50)
 	
     twist = Twist()
     twist.linear.x = ax2
@@ -151,28 +125,11 @@ def callback(data):
     keypad = Twist()
     keypad.linear.x = axKL
     keypad.linear.y = axKU
-
-    print(squ.data)
-    print(cro.data)
-    print(cir.data)
-    print(tri.data)
-    print(l1.data)
-    print(r1.data)
     
 
     pubtw.publish(twist)
-    pubsqu.publish(squ)
-    pubcro.publish(cro)
-    pubcir.publish(cir)
-    pubtri.publish(tri)
-    publ1.publish(l1)
-    pubr1.publish(r1)
-    publ3.publish(l3)
-    pubr3.publish(r3)
     pubkey.publish(keypad)
-    pubopt.publish(opt)
-    pubps.publish(ps)
-    pubpad.publish(pad)
+    
     
 # Intializes everything
 def start():
