@@ -56,12 +56,12 @@ pad.data = False
 
 reverse_fac = 1.0
 speeding_fac = 1.0
-
+left_mode = 1.0
 
 def callback(data):
     global reverse_fac
     global speeding_fac
-    
+    global left_mode
     bt = Int32MultiArray()
     bt.data = data.buttons
 
@@ -84,11 +84,17 @@ def callback(data):
     if bt.data[5]!=r1.data:
         r1.data = bt.data[5]
         pubr1.publish(r1)
+
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
+    
     if bt.data[9]!=opt.data:
         opt.data = bt.data[9]
         pubopt.publish(opt)
+        
+    if bt.data[9] == 1:
+        left_mode *= -1.0
+
     if bt.data[10]!=l3.data:
         l3.data = bt.data[10]
         publ3.publish(l3)
@@ -108,12 +114,20 @@ def callback(data):
         speeding_fac = speeding_fac - abs(data.axes[3] - 1)/2 +0.05
     # -> acceleration
     if not data.axes[4] - 1 == 0: #R2 state
-        speeding_fac = speeding_fac - (data.axes[4] - 1)/2*9
+        speeding_fac = speeding_fac - (data.axes[4] - 1)/2*3
     
+    if left_mode == -1.0:
+        ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+        ax1 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+        ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    else:
+        ax1 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+        ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+        ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
 
-    ax1 = np.round(1.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-    ax2 = np.round(1.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-    ax3 = -np.round(1.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    # ax1 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+    # ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+    # ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
 
     axKL = data.axes[6]
     axKU = data.axes[7]
@@ -125,15 +139,15 @@ def callback(data):
 
     if  keypad.linear.x != axKL:
         keypad.linear.x = axKL
-    #     keypad.linear.z = 1
-    # else:
-    #     keypad.linear.z = 0
+        keypad.linear.z = 1
+    else:
+        keypad.linear.z = 0
 
     if  keypad.linear.y != axKU:
         keypad.linear.y = axKU
-    #     keypad.angular.z = 1
-    # else:
-    #     keypad.angular.z = 0
+        keypad.angular.z = 1
+    else:
+        keypad.angular.z = 0
 
     pubtw.publish(twist)
     pubkey.publish(keypad)
@@ -167,27 +181,35 @@ def start():
                             queue_size = 1)
     pubsqu = rospy.Publisher("button_square",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubcro = rospy.Publisher("button_cross",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubcir = rospy.Publisher("button_circle",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubtri = rospy.Publisher("button_triangle",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     publ1 = rospy.Publisher("button_L1",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubr1 = rospy.Publisher("button_R1",
                             Bool,
+                            tcp_nodelay = True, 
 			                queue_size = 1)
     publ3 = rospy.Publisher("button_L3",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubr3 = rospy.Publisher("button_R3",
                             Bool,
+                            tcp_nodelay = True, 
 			                queue_size = 1)
     pubkey = rospy.Publisher("button_keypad",
                              Twist,
@@ -195,12 +217,15 @@ def start():
                              queue_size = 1)
     pubopt = rospy.Publisher("button_opt",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubps = rospy.Publisher("button_ps",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     pubpad = rospy.Publisher("button_pad",
                             Bool,
+                            tcp_nodelay = True, 
                             queue_size = 1)
     rospy.Subscriber("joy", 
                      Joy, 
