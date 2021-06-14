@@ -37,6 +37,10 @@ opt = Bool()
 ps = Bool()
 pad = Bool()
 
+keypad = Twist()
+keypad.linear.x = 0
+keypad.linear.y = 0
+
 squ.data = False
 cro.data = False
 cir.data = False
@@ -53,6 +57,7 @@ pad.data = False
 reverse_fac = 1.0
 speeding_fac = 1.0
 
+
 def callback(data):
     global reverse_fac
     global speeding_fac
@@ -63,52 +68,52 @@ def callback(data):
 
     if bt.data[0]!=squ.data:
         squ.data = bt.data[0]
-	    pubsqu.publish(squ)
+        pubsqu.publish(squ)
     if bt.data[1]!=cro.data:
         cro.data = bt.data[1]
-	    pubcro.publish(cro)
+        pubcro.publish(cro)
     if bt.data[2]!=cir.data:
         cir.data = bt.data[2]
-	    pubcir.publish(cir)
+        pubcir.publish(cir)
     if bt.data[3]!=tri.data:
         tri.data = bt.data[3]
-	    pubtri.publish(tri)
+        pubtri.publish(tri)
     if bt.data[4]!=l1.data:
         l1.data = bt.data[4]
-	    publ1.publish(l1)
+        publ1.publish(l1)
     if bt.data[5]!=r1.data:
         r1.data = bt.data[5]
-	    pubr1.publish(r1)
+        pubr1.publish(r1)
     if bt.data[8] == 1:
         reverse_fac *= -1.0 #share
     if bt.data[9]!=opt.data:
         opt.data = bt.data[9]
-	    pubopt.publish(opt)
+        pubopt.publish(opt)
     if bt.data[10]!=l3.data:
         l3.data = bt.data[10]
-	    publ3.publish(l3)
+        publ3.publish(l3)
     if bt.data[11]!=r3.data:
         r3.data = bt.data[11]
-	    pubr3.publish(r3)
+        pubr3.publish(r3)
     if bt.data[12]!=ps.data:
         ps.data = bt.data[12]
-	    pubps.publish(ps)
+        pubps.publish(ps)
     if  bt.data[13]!=pad.data:
         pad.data = bt.data[13]
-	    pubpad.publish(pad)
+        pubpad.publish(pad)
 
     speeding_fac = 1.0
     # -> deceleration
-    if not data.axes[3] - 1 == 0: #L1 state
-        speeding_fac = speeding_fac - abs(data.axes[3] - 1)/2
+    if not data.axes[3] - 1 == 0: #L2 state
+        speeding_fac = speeding_fac - abs(data.axes[3] - 1)/2 +0.05
     # -> acceleration
-    if not data.axes[4] - 1 == 0: #R1 state
-        speeding_fac = speeding_fac - (data.axes[4] - 1)/2
+    if not data.axes[4] - 1 == 0: #R2 state
+        speeding_fac = speeding_fac - (data.axes[4] - 1)/2*9
     
 
-    ax1 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-    ax2 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-    ax3 = np.round(10.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    ax1 = np.round(1.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+    ax2 = np.round(1.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+    ax3 = -np.round(1.0 * speeding_fac * reverse_fac * data.axes[2], 2)
 
     axKL = data.axes[6]
     axKU = data.axes[7]
@@ -117,11 +122,18 @@ def callback(data):
     twist.linear.x = ax2
     twist.linear.y = ax1
     twist.angular.z = ax3
-	
-    keypad = Twist()
-    keypad.linear.x = axKL
-    keypad.linear.y = axKU
-    
+
+    if  keypad.linear.x != axKL:
+        keypad.linear.x = axKL
+    #     keypad.linear.z = 1
+    # else:
+    #     keypad.linear.z = 0
+
+    if  keypad.linear.y != axKU:
+        keypad.linear.y = axKU
+    #     keypad.angular.z = 1
+    # else:
+    #     keypad.angular.z = 0
 
     pubtw.publish(twist)
     pubkey.publish(keypad)
