@@ -146,8 +146,8 @@ def callback(data):
     axKU = data.axes[7]
 	
     twist = Twist()
-    twist.linear.x = data.axes[0]
-    twist.linear.y = data.axes[1]
+    twist.linear.x = outL
+    twist.linear.y = outR
     twist.angular.z = 0
 
     if  keypad.linear.x != axKL:
