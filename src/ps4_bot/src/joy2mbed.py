@@ -116,26 +116,39 @@ def callback(data):
     if not data.axes[4] - 1 == 0: #R2 state
         speeding_fac = speeding_fac - (data.axes[4] - 1)/2*3
     
-    if left_mode == -1.0:
-        ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-        ax1 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-        ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
-    else:
-        ax1 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-        ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-        ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    # if left_mode == -1.0:
+    #     ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+    #     ax1 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+    #     ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    # else:
+    #     ax1 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
+    #     ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
+    #     ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
 
-    # ax1 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[0], 2)
-    # ax2 = np.round(3.0 * speeding_fac * reverse_fac * data.axes[1], 2)
-    # ax3 = -np.round(3.0 * speeding_fac * reverse_fac * data.axes[2], 2)
+    if(data.axes[0]>0):
+        if(data.axes[1]>=0):
+            outL = data.axes[1]
+            outR = data.axes[0]
+        else:
+            outL = data.axes[1]
+            outR = -data.axes[0]
+    else if(data.axes[0]<0):
+        if(data.axes[1]>=0):
+            outL = -data.axes[0]
+            outR = data.axes[1]
+        else:
+            outL = data.axes[0]
+            outR = data.axes[1]
+    else:
+        outL = outR = data.axes[1]
 
     axKL = data.axes[6]
     axKU = data.axes[7]
 	
     twist = Twist()
-    twist.linear.x = ax2
-    twist.linear.y = ax1
-    twist.angular.z = ax3
+    twist.linear.x = data.axes[0]
+    twist.linear.y = data.axes[1]
+    twist.angular.z = 0
 
     if  keypad.linear.x != axKL:
         keypad.linear.x = axKL
